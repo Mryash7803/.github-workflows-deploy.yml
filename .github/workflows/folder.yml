@@ -1,0 +1,41 @@
+name: Create Random Files and Folders
+
+on:
+  push:
+    branches:
+      - master  # or 'main' if that's your default branch
+
+jobs:
+  build:
+    runs-on: self-hosted  # This will run on your EC2 runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create random directories and files
+        run: |
+          DIR1="dir_$RANDOM"
+          DIR2="dir_$RANDOM"
+          mkdir "$DIR1" "$DIR2"
+
+          touch "$DIR1/file_$RANDOM.txt"
+          touch "$DIR1/file_$RANDOM.txt"
+
+          touch "$DIR2/file_$RANDOM.txt"
+          touch "$DIR2/file_$RANDOM.txt"
+
+          echo "Created directories: $DIR1, $DIR2"
+          echo "Contents of $DIR1:"
+          ls -l "$DIR1"
+
+          echo "Contents of $DIR2:"
+          ls -l "$DIR2"
+
+      - name: Show full directory structure
+        run: |
+          if command -v tree > /dev/null; then
+            tree
+          else
+            ls -R
+          fi
