@@ -1,38 +1,27 @@
-name: Folder and File Creator
+name: EC2 Random Folder Creator
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
-  create-folders:
+  create-folders-files:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Create random folders and files
+      - name: Create random folders and files in EC2
         run: |
-          # Generate two random folder names
-          FOLDER1="dir_$(head /dev/urandom | tr -dc a-z0-9 | head -c6)"
-          FOLDER2="dir_$(head /dev/urandom | tr -dc a-z0-9 | head -c6)"
+          BASE_DIR="/home/ubuntu/testdata"
+          mkdir -p "$BASE_DIR"
 
-          echo "Creating folders: $FOLDER1 and $FOLDER2"
-          mkdir $FOLDER1 $FOLDER2
+          dir1="dir_$(tr -dc a-z0-9 </dev/urandom | head -c6)"
+          dir2="dir_$(tr -dc a-z0-9 </dev/urandom | head -c6)"
 
-          # Create two random files in each folder with random content
-          for FOLDER in $FOLDER1 $FOLDER2; do
-            for i in 1 2; do
-              FILE="$FOLDER/file_$(head /dev/urandom | tr -dc a-z0-9 | head -c6).txt"
-              echo "This is random content for $FILE" > $FILE
-              echo "Created $FILE with content:"
-              cat $FILE
-              echo "-----------------------------"
+          mkdir -p "$BASE_DIR/$dir1"
+          mkdir -p "$BASE_DIR/$dir2"
+
+          for dir in "$BASE_DIR/$dir1" "$BASE_DIR/$dir2"; do
+            for i in {1..2}; do
+              file="file_$(tr -dc a-z0-9 </dev/urandom | head -c6).txt"
+              echo "This is random content for $dir/$file" > "$dir/$file"
             done
           done
-
-      - name: List all created files
-        run: ls -R
