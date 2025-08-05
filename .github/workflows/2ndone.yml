@@ -1,0 +1,17 @@
+name: Deploy Static Site to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy files to nginx directory
+        run: |
+          sudo cp -r * /var/www/html/
