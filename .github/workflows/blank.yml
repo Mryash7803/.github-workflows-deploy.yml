@@ -11,6 +11,7 @@ jobs:
       - name: Create random folders and files in EC2
         run: |
           BASE_DIR="/home/ubuntu/testdata"
+      
           mkdir -p "$BASE_DIR"
 
           dir1="dir_$(tr -dc a-z0-9 </dev/urandom | head -c6)"
