@@ -1,25 +1,23 @@
-name: Deploy to EC2
+name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: self-hosted  # This tells GitHub to use your EC2 runner
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Connect to EC2 and Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            docker pull yourdockerhubusername/flask-devops-app
-            docker stop app || true
-            docker rm app || true
-            docker run -d -p 5000:5000 --name app yourdockerhubusername/flask-devops-app
+      - name: Run a one-line script
+        run: echo Hello from EC2 runner!
+
+      - name: Run a multi-line script
+        run: |
+          echo "This is your own EC2 machine running the job."
+          uname -a
