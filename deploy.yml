@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted  # This tells GitHub to use your EC2 runner
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run a one-line script
+        run: echo Hello from EC2 runner!
+
+      - name: Run a multi-line script
+        run: |
+          echo "This is your own EC2 machine running the job."
+          uname -a
